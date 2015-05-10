@@ -28,7 +28,7 @@ func NewSyncr(src, dst string) (*Syncr, error) {
 		if err != nil {
 			return nil, err
 		}
-		src = filepath.Join(usr.HomeDir, src[2:])
+		src = fmt.Sprintf("%s%c%s", usr.HomeDir, filepath.Separator, src[2:])
 	}
 
 	var syncr Syncr

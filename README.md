@@ -17,13 +17,13 @@ Create a `syncr.yaml`:
 
 ```yaml
 -
-  source: ~/.vim
+  source: ~/.vim/
   destination: ~/.vim
   hosts:
       - login.foo.net
       - other.com
 -
-  source: ~/dotfiles
+  source: ~/dotfiles/
   destination: ~/dotfiles
   hosts:
       - login.foo.net
