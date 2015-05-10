@@ -32,9 +32,19 @@ func NewSyncr(src, dst string) (*Syncr, error) {
 	}
 
 	var syncr Syncr
-
 	syncr.Description = fmt.Sprintf("%s -> %s", src, dst)
-	syncr.cmd = exec.Command("rsync", "-HP", "-vax", "--delete", src, dst)
+
+	if strings.Contains(src, ":") {
+		hostpath := strings.SplitN(src, ":", 2)
+		host := hostpath[0]
+		path := hostpath[1]
+		syncr.cmd = exec.Command("ssh", "-At", host, fmt.Sprintf("rsync -HP -vax --delete %s %s",
+			strings.Replace(path, " ", "\\ ", -1),
+			strings.Replace(dst, " ", "\\ ", -1)))
+	} else {
+		syncr.cmd = exec.Command("rsync", "-HP", "-vax", "--delete", src, dst)
+	}
+
 	pr, err := syncr.cmd.StdoutPipe()
 	syncr.cmd.Stderr = syncr.cmd.Stdout
 	if err != nil {
