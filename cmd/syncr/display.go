@@ -21,19 +21,23 @@ func Display(buf io.Writer, syncrs []*syncr.Syncr) bool {
 	var anyAlive bool
 	for _, s := range syncrs {
 		s.Lock.Lock()
-		fmt.Fprintln(buf, CyanBold, s.Description)
+		fmt.Fprint(buf, CyanBold, s.Description)
 
 		var statusColor string
+		var sep string
 		switch {
 		case s.Error != nil:
 			statusColor = RedBold
+			sep = "\n"
 		case s.Dead:
 			statusColor = GreenBold
+			sep = " "
 		default:
 			statusColor = ResetColor
+			sep = "\n"
 		}
 
-		fmt.Fprintf(buf, statusColor)
+		fmt.Fprint(buf, statusColor, sep)
 
 		if s.Error != nil {
 			fmt.Fprintf(buf, "Failed: %v\n", s.Error)
